@@ -1,18 +1,27 @@
-import { useCallback, useEffect, useState, useContext, createContext } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useState,
+  useContext,
+  createContext
+} from "react";
 
 const ModalContext = createContext();
 
 // WARNING: This might save all modals in the list if you keep
-// changing pages without reloading :o
+// changing pages without reloading
 
 export function useModal({ key, modalComponent, modalProps }) {
-  const modalClientState = useContext(ModalContext);
-  if (typeof modalClientState === 'undefined') {
-    throw new Error('useModal must be used within a ModalClientProvider');
+  const modalClientState = useModalContext();
+  if (typeof modalClientState === "undefined") {
+    throw new Error("useModal must be used within a ModalClientProvider");
   }
 
   const { setModals, showModal, closeModal } = modalClientState;
-  const show = useCallback(({ newProps }) => showModal(key, newProps), [key, showModal]);
+  const show = useCallback(({ newProps }) => showModal(key, newProps), [
+    key,
+    showModal
+  ]);
   const close = useCallback(() => closeModal(key), [key, closeModal]);
 
   useEffect(() => {
@@ -21,20 +30,22 @@ export function useModal({ key, modalComponent, modalProps }) {
       [key]: {
         key,
         modalProps: { ...modalProps, close },
-        Component: modalComponent,
-      },
+        Component: modalComponent
+      }
     }));
   }, []);
 
-  // return [{ ...modalProps, ...props, closeModal }, showModal, closeModal];
   return { show, close };
 }
 
+const useModalContext = () => useContext(ModalContext);
+
 function ModalBase() {
-  const { modals } = useContext(ModalContext);
+  const { modals } = useModalContext();
   const activeModal = modals[modals.activeModal];
-  console.log(activeModal);
-  return activeModal?.Component ? <activeModal.Component {...activeModal.modalProps} /> : null;
+  return activeModal?.Component ? (
+    <activeModal.Component {...activeModal.modalProps} />
+  ) : null;
 }
 
 export function ModalProvider({ children }) {
@@ -49,25 +60,19 @@ export function ModalProvider({ children }) {
           ...currentModals[key],
           modalProps: {
             ...currentModals[key].modalProps,
-            ...newProps,
-          },
-          isOpen: true,
+            ...newProps
+          }
         },
-        activeModal: key,
+        activeModal: key
       };
     });
   }, []);
 
   const closeModal = useCallback((key) => {
     setModals((currentModals) => {
-      console.log(currentModals);
       return {
         ...currentModals,
-        [key]: {
-          ...currentModals[key],
-          isOpen: false,
-        },
-        activeModal: '',
+        activeModal: ""
       };
     });
   }, []);
