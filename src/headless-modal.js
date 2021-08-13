@@ -3,8 +3,8 @@ import {
   useEffect,
   useState,
   useContext,
-  createContext
-} from "react";
+  createContext,
+} from 'react';
 
 const ModalContext = createContext();
 
@@ -13,14 +13,14 @@ const ModalContext = createContext();
 
 export function useModal({ key, modalComponent, modalProps }) {
   const modalClientState = useModalContext();
-  if (typeof modalClientState === "undefined") {
-    throw new Error("useModal must be used within a ModalClientProvider");
+  if (typeof modalClientState === 'undefined') {
+    throw new Error('useModal must be used within a ModalClientProvider');
   }
 
   const { setModals, showModal, closeModal } = modalClientState;
   const show = useCallback(({ newProps }) => showModal(key, newProps), [
     key,
-    showModal
+    showModal,
   ]);
   const close = useCallback(() => closeModal(key), [key, closeModal]);
 
@@ -30,8 +30,8 @@ export function useModal({ key, modalComponent, modalProps }) {
       [key]: {
         key,
         modalProps: { ...modalProps, close },
-        Component: modalComponent
-      }
+        Component: modalComponent,
+      },
     }));
   }, []);
 
@@ -60,10 +60,10 @@ export function ModalProvider({ children }) {
           ...currentModals[key],
           modalProps: {
             ...currentModals[key].modalProps,
-            ...newProps
-          }
+            ...newProps,
+          },
         },
-        activeModal: key
+        activeModal: key,
       };
     });
   }, []);
@@ -72,7 +72,7 @@ export function ModalProvider({ children }) {
     setModals((currentModals) => {
       return {
         ...currentModals,
-        activeModal: ""
+        activeModal: '',
       };
     });
   }, []);

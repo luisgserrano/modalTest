@@ -1,5 +1,5 @@
-import "./styles.css";
-import { useModal } from "./headless-modal";
+import './styles.css';
+import { useModal } from './headless-modal';
 
 function NewModal({ close, title }) {
   return (
@@ -12,41 +12,41 @@ function NewModal({ close, title }) {
 
 function Nested() {
   const { show: showDetailsBilling } = useModal({
-    key: "details-billing-modal",
+    key: 'details-billing-modal',
     modalComponent: NewModal,
-    modalProps: { title: "Vamos ver se?" }
+    modalProps: { title: 'Billing details' },
   });
 
   return (
     <button
       onClick={() =>
-        showDetailsBilling({ newProps: { title: "billint details modal" } })
+        showDetailsBilling({
+          newProps: { title: 'Billing details modal override' },
+        })
       }
     >
-      mostra la isso
+      show nested example
     </button>
   );
 }
 
 export default function App() {
   const { show } = useModal({
-    key: "billing-modal",
+    key: 'billing-modal',
     modalComponent: NewModal,
-    modalProps: { title: "Vamos ver se resulta?" }
+    modalProps: { title: 'Delete payment' },
   });
 
   const { show: showEditBilling } = useModal({
-    key: "edit-billing-modal",
+    key: 'edit-billing-modal',
     modalComponent: NewModal,
-    modalProps: { title: "Edit billing details" }
+    modalProps: { title: 'Edit billing details' },
   });
 
   return (
     <div className="App">
-      <h1>Hello CodeSandbox</h1>
-      <h2>Start editing to see some magic happen!</h2>
-      <button onClick={show}>mostra la isso</button>
-      <button onClick={showEditBilling}>mostra la isso</button>
+      <button onClick={show}>show example one</button>
+      <button onClick={showEditBilling}>show example two</button>
       <Nested />
     </div>
   );
